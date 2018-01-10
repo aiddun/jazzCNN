@@ -42,17 +42,15 @@ activation-8 (Activation)    | (None, 12, 113, 256)     |   0
 max-pooling2d-4 (MaxPooling2D) | (None, 6, 56, 256)       |   0
 dropout-4 (Dropout)          | (None, 6, 56, 256)       |   0
 flatten-1 (Flatten)          | (None, 86016)            |   0
-dense-1 (Dense)              | (None, 32)               |   2752544
-dropout-5 (Dropout)          | (None, 32)               |   0
-dense-2 (Dense)              | (None, 512)              |   16896
+dense-1 (Dense)              | (None, 512)               |   44040704
+dropout-5 (Dropout)          | (None, 512)               |   0
+dense-2 (Dense)              | (None, 512)              |   262656
 dropout-6 (Dropout)          | (None, 512)              |   0
 dense-3 (Dense)              | (None, 512)              |   262656
 dropout-7 (Dropout)          | (None, 512)              |   0
-dense-4 (Dense)              | (None, 512)              |   262656
-dropout-8 (Dropout)          | (None, 512)              |   0
-dense-5 (Dense)              | (None, 4)                |   2052
-Total params: 4,764,548 
-Trainable params: 4,764,548
+dense-4 (Dense)              | (None, 4)                |   2052
+Total params: 46,035,812 
+Trainable params: 46,035,812
 Non-trainable params: 0
 
 _________________________________________________________________
