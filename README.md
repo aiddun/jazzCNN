@@ -14,7 +14,7 @@ For training on a dataset scraped from [The David W. Niven Collection of Early J
 ### Network Structure
 
 Layer (type)                 | Output Shape             | Param #
-| --- | --- | --- |
+| :--- | :---: | :---: |
 melspectrogram-1 (Melspectrogram) | (None, 128, 938, 1)      |   296064   
 normalization2d-1 (Normalization)  | (None, 128, 938, 1)      |   0      
 conv2d-1 (Conv2D)            | (None, 128, 938, 32)     |   320
