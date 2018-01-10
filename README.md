@@ -5,10 +5,13 @@ For training on a dataset scraped from [The David W. Niven Collection of Early J
 
   
   
-
+### Sample Melspectrogram
 ![Alt text](img/melspec.png?raw=true "Sample Melspectrogram")
-Sample Melspectrogram
 
+  
+  
+
+### Network Structure
 
 Layer (type)                 | Output Shape             | Param #
 | --- | --- | --- |
