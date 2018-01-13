@@ -21,7 +21,7 @@ def preprocess(periods, testCategoryNum):
             bottomrange = rnge[0]
             toprange = rnge[1]
             for i in range(bottomrange, toprange):
-                recYearDirIndex = glob.glob("..//toserver//FINAL//" + str(i) + "//*.wav")
+                recYearDirIndex = glob.glob("..//FINAL//" + str(i) + "//*.wav")
                 for n in range(len(recYearDirIndex)):
                     path = recYearDirIndex[n]
                     x.append(path)

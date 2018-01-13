@@ -22,8 +22,7 @@ epochs = 500
 #Random Seed
 np.random.seed(4)
 audio_frequency = 16000
-batch_size = 16
-
+batch_size = 4
 
 
 #Pre-process data 
@@ -39,13 +38,15 @@ saveModel = keras.callbacks.ModelCheckpoint('weights.{epoch:02d}.hdf5', monitor=
 
 
 #Define Model
+print("Defining model.")
+
 model = Sequential()
 
 model.add(Melspectrogram(input_shape=(1, 240000), sr=16000, n_mels=128, fmin=0.0, fmax=None,
                                                 power_melgram=1.0, return_decibel_melgram=True,
                                                 trainable_fb=True, trainable_kernel=True))
 
-model.add(Normalization2D(int_axis=0))
+model.add(Normalization2D(int_axis=-1))
 
 model.add(Conv2D(32, (3, 3), padding='same'))
 model.add(Activation('relu'))
@@ -80,8 +81,6 @@ model.add(Flatten())
 model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(512, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(512, activation='relu'))
 
 model.add(Dropout(0.2))
 model.add(Dense(4, activation='softmax'))
@@ -92,9 +91,6 @@ opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
 
 
 #Batch Size Calculatons
-batches = int((x_train.size) / batch_size)
-print(str(batches) + " batches, with a batch size of " + str(batch_size) + ".")
-extraBatchSize = (x_train.size) % batches
 
 
 model.compile(loss='sparse_categorical_crossentropy',
@@ -103,15 +99,20 @@ model.compile(loss='sparse_categorical_crossentropy',
               )
 
 print("")
-
+print("Model compiled.")
 model.summary()
 
-
-generate.generate(x_train, y_train, batches, batch_size, extraBatchSize)
+batches = int(y_train.size/batch_size)
                    
-model.fit(x_train, y_train, batch_size=16, epochs=epochs, verbose=1, callbacks=[tbCallBack, saveModel])
+model.fit_generator(generate.generate(x_train, y_train, batch_size), 
+                    steps_per_epoch=(batches), epochs=epochs, 
+                    verbose=1, callbacks=[tbCallBack, saveMod], 
+                    max_queue_size=10, workers=1)
 
+print("Training done.")
 
+print("Saving model.")
 model.save('weights_FINAL.h5')
+print("Model saved.")
 
 #model.evaluate(x_test, y_test, verbose=1, sample_weight=None, steps=None)

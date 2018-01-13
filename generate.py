@@ -34,7 +34,7 @@ def train(x_batch, y_batch):
     x_batch_final = np.concatenate((x_batch_final[:]))
     y_batch_final = np.concatenate((y_batch_final[:]))
     
-    #Randomly shuffles sub-batch to prevent
+    #Randomly shuffles sub-batch to prevent overfitting
     perm = np.random.permutation(x_batch_final.shape[0])
     x_batch_final = x_batch_final[perm]
     y_batch_final = y_batch_final[perm]
@@ -42,17 +42,20 @@ def train(x_batch, y_batch):
     print(y_batch_final.shape)
     print(x_batch_final.shape)
 
-    return (x_batch_final, y_batch_final)
+    return (x_batch_final, y_bahtch_final)
 
-def generate(x_train, y_train, batches, batch_size, extraBatchSize):
+def generate(x_train, y_train, batch_size):
 
-    x_batch = x_train[int(y_train.size/2):]
-    y_batch = y_train[int(y_train.size/2):]
+    #Just need to split array into batches of 4
+    batches = int(y_train.size/batch_size)
 
-    inputs, targets = train(x_batch, y_batch)
-    return inputs, targets
+    x_train = np.array_split(x_train, batches)
 
-    #Extra batch
-    x_batch = x_train[-int(y_train.size/2):]
-    y_batch = y_train[-int(y_train.size/2):]
-    return train(x_batch, y_batch)
+    totalSamples = 0
+    while 1:
+        for x in (x_train.size[0]):
+            inputs, targets = train(x_train[x], y_train[x])
+            totalSamples += inputs.shape[0]
+            yield inputs, target
+    totalSamples = np.array([totalSamples])
+    np.savetxt('totalsamples.txt', totalSamples)
