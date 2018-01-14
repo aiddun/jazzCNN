@@ -98,8 +98,8 @@ def preprocess(periods, testCategoryNum):
         x_test = np.array(y_test)
         y_test = np.array(y_test)
 
-        x_train = x
-        y_train = y
+        x_train = np.array(x)
+        y_train = np.array(y)
 
         return x_train, y_train, x_test, y_test
 
