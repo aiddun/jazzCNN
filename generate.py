@@ -13,7 +13,7 @@ def train(x_batch, y_batch):
         x_rate, x_audio = scipy.io.wavfile.read(x_batch_batch)
         x_audio = x_audio[x_rate * 300: -(x_rate * 300)]
 
-        audiosize = x_rate * 15
+        audiosize = x_rate * 5
         cuts = int(x_audio.size / (audiosize))
         x_final = np.ndarray((cuts, 1, audiosize), dtype=int)
         y_final = np.ndarray((cuts), dtype=int)

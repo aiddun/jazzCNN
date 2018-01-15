@@ -42,7 +42,7 @@ print("Defining model.")
 
 model = Sequential()
 
-model.add(Melspectrogram(input_shape=(1, 240000), sr=16000, n_mels=128, fmin=0.0, fmax=None,
+model.add(Melspectrogram(input_shape=(1, 80000), sr=16000, n_mels=12, fmin=0.0, fmax=None,
                                                 power_melgram=1.0, return_decibel_melgram=True,
                                                 trainable_fb=True, trainable_kernel=True))
 
@@ -62,33 +62,10 @@ model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-model.add(Conv2D(128, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(128, (3, 3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-
-model.add(Conv2D(256, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(256, (3, 3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-
-model.add(Conv2D(512, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(512, (3, 3)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-
 model.add(Flatten())
 
-model.add(Dense(512, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(512, activation='relu'))
 
+model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(4, activation='softmax'))
 
