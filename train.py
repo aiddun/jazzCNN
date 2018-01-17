@@ -65,7 +65,7 @@ model.add(Dropout(0.25))
 model.add(Flatten())
 
 
-model.add(Dense(512, activation='relu'))
+model.add(Dense(16, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(4, activation='softmax'))
 
@@ -95,11 +95,16 @@ model.fit_generator(generate.generate(x_train, y_train, batch_size),
                     steps_per_epoch=(batches), epochs=epochs, 
                     verbose=1, callbacks=[tbCallBack, saveModel], 
                     max_queue_size=1, workers=1)
-'''
+
+
+
+
+
+
 print("Training done.")
 
 print("Saving model.")
 model.save('weights_FINAL.h5')
 print("Model saved.")
-'''
+
 #model.evaluate(x_test, y_test, verbose=1, sample_weight=None, steps=None)
