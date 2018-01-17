@@ -19,7 +19,7 @@ def train(x_batch, y_batch):
 def trainGet(x_batch_batch):
     print("nextfile")
 
-    sampletime = 5
+    sampletime = 2.5
     x_rate, x_audio = scipy.io.wavfile.read(x_batch_batch)
     samplesize = sampletime * x_rate
     audio_padding_mins = 60 * 5
@@ -36,7 +36,7 @@ def generate(x_train, y_train, batch_size):
     # 
     print("gen called")
 
-    batches = round(y_train.size/batch_size)
+    batches = round(y_train.size/batch_size/4)
     x_train = np.array_split(np.array(x_train), batches)
     y_train = np.array_split(np.array(y_train), batches)
 
