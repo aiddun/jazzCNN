@@ -42,7 +42,7 @@ print("Defining model.")
 
 model = Sequential()
 
-model.add(Melspectrogram(input_shape=(1, 80000), sr=16000, n_mels=128, fmin=0.0, fmax=None,
+model.add(Melspectrogram(input_shape=(1, 80000), sr=16000, n_mels=64, fmin=0.0, fmax=None,
                                                 power_melgram=1.0, return_decibel_melgram=True,
                                                 trainable_fb=True, trainable_kernel=True))
 
@@ -92,8 +92,7 @@ print("")
 print("Model compiled.")
 model.summary()
 
-batches = int(y_train.size/batch_size)
-
+batches = getBatches(x_train, batch_size)
 
 
                    
