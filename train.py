@@ -22,7 +22,7 @@ epochs = 500
 #Random Seed
 np.random.seed(4)
 audio_frequency = 16000
-batch_size = 4
+batch_size = 16
 
 
 #Pre-process data 
@@ -32,8 +32,8 @@ print("Done.")
 
 
 #Initialize Callbacks
-tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
-saveModel = keras.callbacks.ModelCheckpoint('weights.{epoch:02d}.hdf5', monitor='epoch', verbose=1, save_best_only=False, save_weights_only=False, mode='auto', period=10)
+tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True, write)
+saveModel = keras.callbacks.ModelCheckpoint('weights2epoch.{epoch:02d}.hdf5', monitor='epoch', verbose=1, save_best_only=False, save_weights_only=False, mode='auto', period=10)
 
 
 
@@ -42,11 +42,11 @@ print("Defining model.")
 
 model = Sequential()
 
-model.add(Melspectrogram(input_shape=(1, 80000), sr=16000, n_mels=12, fmin=0.0, fmax=None,
+model.add(Melspectrogram(input_shape=(1, 80000), sr=16000, n_mels=128, fmin=0.0, fmax=None,
                                                 power_melgram=1.0, return_decibel_melgram=True,
                                                 trainable_fb=True, trainable_kernel=True))
 
-model.add(Normalization2D(int_axis=-1))
+model.add(Normalization2D(stf_axis='freq'))
 
 model.add(Conv2D(32, (3, 3), padding='same'))
 model.add(Activation('relu'))
@@ -62,10 +62,16 @@ model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
+model.add(Conv2D(128, (3, 3), padding='same'))
+model.add(Activation('relu'))
+model.add(Conv2D(128, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
 model.add(Flatten())
 
-
-model.add(Dense(16, activation='relu'))
+model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(4, activation='softmax'))
 
