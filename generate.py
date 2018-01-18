@@ -3,7 +3,7 @@ from numpy import random
 import scipy.io.wavfile
 
 def train(x_batch, y_batch):
-    x_batch_final = np.ndarray((0, 1, 80000), dtype="int16")
+    x_batch_final = np.ndarray((0, 1, 48000), dtype="int16")
     y_batch_final = np.ndarray((0), dtype=int)
     
     for h in range(x_batch.shape[0]):
@@ -19,7 +19,7 @@ def train(x_batch, y_batch):
 def trainGet(x_batch_batch):
     print("nextfile")
 
-    sampletime = 2.5
+    sampletime = 3
     x_rate, x_audio = scipy.io.wavfile.read(x_batch_batch)
     samplesize = sampletime * x_rate
     audio_padding_mins = 60 * 5
