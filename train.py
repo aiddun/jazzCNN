@@ -12,17 +12,18 @@ from kapre.time_frequency import Melspectrogram
 from kapre.utils import Normalization2D
 
 import preprocessing
+import batchnumber
 import generate
 
 periods = [[1923, 1930], [1931, 1944], [1945, 1949], [1950, 1955]]
-testCategoryNum = 4
+testCategoryNum = 8
 
 epochs = 5
 
 #Random Seed
 np.random.seed(4)
 audio_frequency = 16000
-batch_size = 16
+batch_size = 8
 
 
 #Pre-process data 
@@ -35,39 +36,56 @@ print("Done.")
 tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
 saveModel = keras.callbacks.ModelCheckpoint('weights2epoch.{epoch:02d}.hdf5', monitor='epoch', verbose=1, save_best_only=False, save_weights_only=False, mode='auto', period=1)
 
+lossGraph = []
+accGraph  = []
+
+class Histories(keras.callbacks.Callback):
+    def on_train_begin(self, logs={}):
+        self.acc = []
+        self.losses = []
+ 
+    def on_batch_end(self, batch, logs={}):
+        self.losses.append(logs.get('loss'))
+        self.acc.append(logs.get('acc'))
+        return
+
+
+graphdata = {}
+grapher = Histories()
+
 
 #Define Model
 print("Defining model.")
 
 model = Sequential()
 
-model.add(Melspectrogram(input_shape=(1, 48000), sr=16000, n_mels=64, fmin=0.0, fmax=None,
-                                                power_melgram=1.0, return_decibel_melgram=True,
+model.add(Melspectrogram(input_shape=(1, 32000), sr=16000, n_mels=32, fmin=0.0, fmax=None,
+                                                power_melgram=2.0, return_decibel_melgram=True,
                                                 trainable_fb=True, trainable_kernel=True))
 
-model.add(Normalization2D(str_axis='freq'))
+model.add(Normalization2D(str_axis='freq'))	
 
-model.add(Conv2D(64, (4, 4), padding='same'))
+
+model.add(Conv2D(16, (3, 3), padding='same'))
 model.add(Activation('relu'))
-model.add(Conv2D(64, (4, 4)))
+model.add(Conv2D(16, (3, 3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-model.add(Conv2D(128, (4, 4), padding='same'))
+model.add(Conv2D(32, (3, 3), padding='same'))
 model.add(Activation('relu'))
-model.add(Conv2D(128, (4, 4)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-
-model.add(Conv2D(256, (4, 4), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(256, (4, 4)))
+model.add(Conv2D(32, (3, 3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
+model.add(Conv2D(64, (3, 3), padding='same'))
+model.add(Activation('relu'))
+model.add(Conv2D(64, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
 
 model.add(Flatten())
 
@@ -75,11 +93,12 @@ model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.2))
+
 model.add(Dense(4, activation='softmax'))
 
 
 # initiate RMSprop optimizer
-opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
+opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-5)
 
 
 #Batch Size Calculatons
@@ -100,11 +119,8 @@ batches = batchnumber.getBatches(x_train, batch_size)
                    
 model.fit_generator(generate.generate(x_train, y_train, batch_size), 
                     steps_per_epoch=(batches), epochs=epochs, 
-                    verbose=1, callbacks=[tbCallBack, saveModel], 
-                    max_queue_size=1, workers=1)
-
-
-
+                    verbose=1, callbacks=[tbCallBack, saveModel, grapher], 
+                    max_queue_size=4, workers=1)
 
 
 
@@ -113,5 +129,7 @@ print("Training done.")
 print("Saving model.")
 model.save('weights_FINAL.h5')
 print("Model saved.")
+
+np.save("lossgraph", np.array(logs))
 
 #model.evaluate(x_test, y_test, verbose=1, sample_weight=None, steps=None)

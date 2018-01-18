@@ -9,6 +9,7 @@ def getBatches(x_train, batch_size):
         batches += batchGet(u)
 
     batches = round(batches/batch_size)
+    batches = round(batches/batch_size)
 
     print(str(batches) + " batches.")
     return batches
@@ -18,7 +19,7 @@ def batchGet(path):
 
     audio = os.path.getsize(path)
 
-    sampletime = 5
+    sampletime = 2
     samplesize = sampletime * rate
 
     audio_padding_mins = 60 * 5

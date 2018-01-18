@@ -7,7 +7,9 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.optimizers import rmsprop
+from keras.models import load_model
 
+import kapre
 from kapre.time_frequency import Melspectrogram
 from kapre.utils import Normalization2D
 
@@ -35,7 +37,7 @@ print("Done.")
 batches = batchnumber.getBatches(x_train, batch_size)
 
 
-model = keras.load('weights_FINAL.h5', custom_objects={'Melspectrogram':kapre.time_frequency.Melspectrogram, 'Normalization2D':kapre.utils.Normalization2D})
+model = load_model('weights.00.hdf5', custom_objects={'Melspectrogram':kapre.time_frequency.Melspectrogram, 'Normalization2D':kapre.utils.Normalization2D})
 
 model.summary()
 
@@ -43,7 +45,7 @@ model.summary()
 yval = []
 ypredict = []
 
-for i in generate.generate(x_train, y_train, batch_size):
+for i in generate1.generate(x_train, y_train, batch_size):
     for q in range(i[0].shape[0]):
         x_val = x[0][q]
         y_val = x[1][q]
