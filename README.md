@@ -75,7 +75,10 @@ model.compile(loss='sparse_categorical_crossentropy',
 
 ## Usage
 
-The program will look for 16000hz wavform files in ./FINAL/19**/. I still need to add console keyword arguments to tune hyperparameters. To train, run train.py.
+The program will look for 16000hz wavform files in ./FINAL/19\*\*/. I still need to add console keyword arguments to tune hyperparameters. To train, run train.py. The pretrained weights use custom layers, so you will have to use the following structure to load weights:
+```
+model = load_model('weights.00.hdf5', custom_objects={'Melspectrogram':kapre.time_frequency.Melspectrogram, 'Normalization2D':kapre.utils.Normalization2D})
+```
 
 
 ## Results and Conclusions
