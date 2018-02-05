@@ -1,56 +1,95 @@
 # jazzCNN
-A deep convolutional neural network for the classification of Jazz for use in style comparison and future use for Style Extraction/Transfer built in Keras. 15 second 16000hz audio files are converted to Melspectrograms with the GPU on the fly using kapre, and are then fed into a deep CNN. 
+ 
+An experiment looking at model confidence of a trained classifier as a potential metric of quantitative chronological Jazz style progression using a deep CNN.
 
-For training on a dataset scraped from [The David W. Niven Collection of Early Jazz Legends](https://archive.org/details/davidwnivenjazz). Complete track list attached. Note some entries have multiple tapes.
+**Blog post:** (coming soon)
+
+3 second 16000hz audio files were converted to Mel Spectrograms on the fly with the GPU using Kapre, and then fed into a deep CNN trained as a classifier, with the mean Softmax confidence per category of each category looked at as a metric of similarity.
+
+Trained on a dataset scraped from Internet Archive's [The David W. Niven Collection of Early Jazz Legends](https://archive.org/details/davidwnivenjazz). Samples were converted into 16000hz wavform with the first and last 5 minutes of each track cut to remove some track commentary. Track list attached. Note some entries have multiple tapes. The dataset came out to be over 60GB, so I unfortunately can't host it.
 
   
+## Requirements
+- Python 3
+- Tensorflow
+- Keras 2 (and dependencies)
+- [Kapre](https://github.com/keunwoochoi/kapre)
+- Numpy
+- Scipy
   
-### Sample Melspectrogram
-![Alt text](img/melspec.png?raw=true "Sample Melspectrogram")
-
   
   
 
-### Network Structure
+## Network Structure
+I realise it's easier to just paste the network code than to have a giant network summary table. Also available in train.py. Input is a three second numpy wavfile array. 
 
-Layer (type)                 | Output Shape             | Param #
-| :--- | :---: | :---: |
-melspectrogram-1 (Melspectrogram) | (None, 128, 938, 1)      |   296064   
-normalization2d-1 (Normalization)  | (None, 128, 938, 1)      |   0      
-conv2d-1 (Conv2D)            | (None, 128, 938, 32)     |   320
-activation-1 (Activation)    | (None, 128, 938, 32)     |   0
-conv2d-2 (Conv2D)            | (None, 126, 936, 32)     |   9248
-activation-2 (Activation)    | (None, 126, 936, 32)     |  0
-max-pooling2d-1 (MaxPooling2D)   | (None, 63, 468, 32)      |   0
-dropout-1 (Dropout)          | (None, 63, 468, 32)      |   0
-conv2d-3 (Conv2D)            | (None, 63, 468, 64)      |   18496
-activation-3 (Activation)    | (None, 63, 468, 64)      |   0
-conv2d-4 (Conv2D)            | (None, 61, 466, 64)      |   36928
-activation-4 (Activation)    | (None, 61, 466, 64)      |   0
-max-pooling2d-2 (MaxPooling2D)   | (None, 30, 233, 64)      |   0
-dropout-2 (Dropout)          | (None, 30, 233, 64)      |   0
-conv2d-5 (Conv2D)            | (None, 30, 233, 128)     |   73856
-activation-5 (Activation)    | (None, 30, 233, 128)     |   0
-conv2d-6 (Conv2D)            | (None, 28, 231, 128)     |   147584
-activation-6 (Activation)    | (None, 28, 231, 128)     |   0
-max-pooling2d-3 (MaxPooling2D) | (None, 14, 115, 128)     |   0
-dropout-3 (Dropout)          | (None, 14, 115, 128)     |   0
-conv2d-7 (Conv2D)            | (None, 14, 115, 256)     |   295168
-activation-7 (Activation)    | (None, 14, 115, 256)     |   0
-conv2d-8 (Conv2D)            | (None, 12, 113, 256)     |   590080
-activation-8 (Activation)    | (None, 12, 113, 256)     |   0
-max-pooling2d-4 (MaxPooling2D) | (None, 6, 56, 256)       |   0
-dropout-4 (Dropout)          | (None, 6, 56, 256)       |   0
-flatten-1 (Flatten)          | (None, 86016)            |   0
-dense-1 (Dense)              | (None, 512)               |   44040704
-dropout-5 (Dropout)          | (None, 512)               |   0
-dense-2 (Dense)              | (None, 512)              |   262656
-dropout-6 (Dropout)          | (None, 512)              |   0
-dense-3 (Dense)              | (None, 512)              |   262656
-dropout-7 (Dropout)          | (None, 512)              |   0
-dense-4 (Dense)              | (None, 4)                |   2052
-Total params: 46,035,812 
-Trainable params: 46,035,812
-Non-trainable params: 0
+```
+model = Sequential()
 
-_________________________________________________________________
+model.add(Melspectrogram(input_shape=(1, 48000), sr=32, n_mels=64, fmin=0.0, fmax=None,
+                                                power_melgram=1.0, return_decibel_melgram=True,
+                                                trainable_fb=True, trainable_kernel=True))
+
+model.add(Normalization2D(int_axis=-1))    
+
+model.add(Conv2D(16, (3, 3), padding='same'))
+model.add(Activation('relu'))
+model.add(Conv2D(16, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(32, (3, 3), padding='same'))
+model.add(Activation('relu'))
+model.add(Conv2D(32, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(64, (3, 3), padding='same'))
+model.add(Activation('relu'))
+model.add(Conv2D(64, (3, 3)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Flatten())
+
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.2))
+
+model.add(Dense(4, activation='softmax'))
+
+
+
+opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-5)
+
+model.compile(loss='sparse_categorical_crossentropy',
+              optimizer=opt)
+
+```
+
+## Results and Conclusions
+
+Results were pretty interesting. 
+
+model confidence with itself
+
+Loss began to rise and accuracy began to drop after continuous epochs, but the results for the first epoch were pretty promising, however with a potential possibility of severe underfitting, even with 347,990 training samples. Also, the dataset needs further preprocessing cleaning as there still exists some of Niven's commentary on tracks, which removal could potentially be automated. The network structure could be modified, and the *chronological similarity of the model accuracy over time* demonstrates and warrents a need for further testing and revisiting. Unfortunately, I can only afford so many EC2 GPU hours at the moment.
+In a revisit, it may actually be wiser to train "yes or no" 4 binary classifiers, one for each period, and then feed all of the samples through those in order to more effectively train and recognize features.
+
+Future things to do with data:
+- Feature visualization
+- Style transfer?
+
+**Results:**
+|   | **Early Jazz (1920-1930)** |**Swing/Big Band (1931-1944)**|**Bop (1945-1959)**|**Cool Jazz (1950-1955)**|
+| --- | --- | --- | --- | --- |
+| **Early Jazz (1920-1930)** | **0.371** | 0.205 | 0.190 | 0.152 |
+| **Swing/Big Band (1931-1944)**| 0.205 | **0.200** | 0.322 | 0.165 |
+| **Bop (1945-1959)**| 0.190 | 0.322 |**0.538** | 0.324 |
+| **Cool Jazz (1950-1955)**| 0.152 | 0.165 | 0.324 |**0.173** |
+
+**Graphs:** Coming soon.
