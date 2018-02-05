@@ -75,13 +75,16 @@ model.compile(loss='sparse_categorical_crossentropy',
 
 ## Usage
 
-The program will look for 16000hz wavform files in ./FINAL/19**/. I still need to add console keyword arguments to tune hyperparameters. To train, run train.py.
+The program will look for 16000hz wavform files in ./FINAL/19\*\*/. I still need to add console keyword arguments to tune hyperparameters. To train, run \_train/train.py. To iterate trained weights over the dataset, use \_evaluate/confidence_calculate.py. The pretrained weights use custom layers, so you will have to use the following structure to load weights:
+```
+model = load_model('weights.00.hdf5', custom_objects={'Melspectrogram':kapre.time_frequency.Melspectrogram, 'Normalization2D':kapre.utils.Normalization2D})
+```
 
 
 ## Results and Conclusions
 
 Results were pretty interesting, to an extent, and offer a clever premice, but require much future work. Loss began to rise and accuracy began to drop after continuous epochs, but the results for the first epoch were pretty promising, however with a potential possibility of severe underfitting, even with 347,990 training samples. Also, the dataset needs further preprocessing cleaning as there still exists some of Niven's commentary on tracks, which removal could potentially be automated. The network structure could be modified, and the *chronological similarity of the model accuracy over time* demonstrates and warrents a need for further testing and revisiting. Unfortunately, I can only afford so many EC2 GPU hours at the moment.
-In a revisit, it may actually be wiser to train "yes or no" 4 binary classifiers, one for each period, and then feed all of the samples through those in order to more effectively train and recognize features.
+In a revisit, it may actually be wiser to train 4 "yes or no" binary classifiers, one for each period, and then feed all of the samples through those in order to more effectively train and recognize features.
 
 Future things to do with data:
 - Feature visualization
