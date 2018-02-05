@@ -99,4 +99,4 @@ Future things to do with data:
 | **Bop (1945-1959)**| 0.190 | 0.322 |**0.538** | 0.324 |
 | **Cool Jazz (1950-1955)**| 0.152 | 0.165 | 0.324 |**0.173** |
 
-**Graphs:** Coming soon.
+**Graphs:** 
