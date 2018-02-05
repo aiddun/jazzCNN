@@ -4,7 +4,7 @@ An experiment looking at model confidence of a trained classifier as a potential
 
 **Blog post:** (coming soon)
 
-3 second 16000hz audio files were converted to Mel Spectrograms on the fly with the GPU using Kapre, and then fed into a deep CNN trained as a classifier, with the mean Softmax confidence per category of each category looked at as a metric of similarity.
+3 second 16000hz audio files were converted to Mel Spectrograms on the fly with the GPU using Kapre, and then fed into a deep CNN trained as a classifier. My main intention was to see if the mean Softmax confidence per category of each category could be looked at as a metric of similarity/progression between periods.
 
 Trained on a dataset scraped from Internet Archive's [The David W. Niven Collection of Early Jazz Legends](https://archive.org/details/davidwnivenjazz). Samples were converted into 16000hz wavform with the first and last 5 minutes of each track cut to remove some track commentary. Track list attached. Note some entries have multiple tapes. The dataset came out to be over 60GB, so I unfortunately can't host it.
 
