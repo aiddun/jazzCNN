@@ -73,18 +73,15 @@ model.compile(loss='sparse_categorical_crossentropy',
 
 ## Results and Conclusions
 
-Results were pretty interesting. 
-
-model confidence with itself
-
-Loss began to rise and accuracy began to drop after continuous epochs, but the results for the first epoch were pretty promising, however with a potential possibility of severe underfitting, even with 347,990 training samples. Also, the dataset needs further preprocessing cleaning as there still exists some of Niven's commentary on tracks, which removal could potentially be automated. The network structure could be modified, and the *chronological similarity of the model accuracy over time* demonstrates and warrents a need for further testing and revisiting. Unfortunately, I can only afford so many EC2 GPU hours at the moment.
+Results were pretty interesting, to an extent, and offer a clever premice, but require much future work. Loss began to rise and accuracy began to drop after continuous epochs, but the results for the first epoch were pretty promising, however with a potential possibility of severe underfitting, even with 347,990 training samples. Also, the dataset needs further preprocessing cleaning as there still exists some of Niven's commentary on tracks, which removal could potentially be automated. The network structure could be modified, and the *chronological similarity of the model accuracy over time* demonstrates and warrents a need for further testing and revisiting. Unfortunately, I can only afford so many EC2 GPU hours at the moment.
 In a revisit, it may actually be wiser to train "yes or no" 4 binary classifiers, one for each period, and then feed all of the samples through those in order to more effectively train and recognize features.
 
 Future things to do with data:
 - Feature visualization
 - Style transfer?
 
-**Results:**
+#### Results:
+
 |   | **Early Jazz (1920-1930)** |**Swing/Big Band (1931-1944)**|**Bop (1945-1959)**|**Cool Jazz (1950-1955)**|
 | --- | --- | --- | --- | --- |
 | **Early Jazz (1920-1930)** | **0.371** | 0.205 | 0.190 | 0.152 |
