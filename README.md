@@ -1,6 +1,6 @@
 # jazzCNN
  
-An experiment looking at mean confidence of a unmodified deep convolutional classifier as a potential metric of quantitative chronological Jazz style progression using a deep CNN. My premise with this project was if a model, even a simple deep convolutional classifier, can express its Softmax confidence that a sample of audio possesses certain common identified "stylistic" features, then using that confidence over an extremely large population of samples could potentially yield a basic rudimentary metric of similarity between categories.
+An experiment looking at mean confidence of a  deep convolutional neural network as a way to quanititatively find a metric of  chronological progression of Jazz. My premise with this project was if a model, even a simple deep convolutional classifier, can express its Softmax confidence that a sample of audio possesses certain common identified "stylistic" features, then using that confidence over an extremely large population of samples could potentially yield a basic rudimentary metric of similarity between categories.
 
 **Blog post:** (coming soon)
 
