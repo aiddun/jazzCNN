@@ -1,4 +1,4 @@
 # jazzCNN
-Generating a quantitative metric for historic Jazz progression with CNNs
+Studying jazz history quantitatively with deep learning.
 
 Updated/revised summary coming soon.
