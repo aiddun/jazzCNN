@@ -1,5 +1,5 @@
 Keras==2.0.8
-tensorflow_gpu==1.15.2
+tensorflow_gpu==2.9.3
 scipy==1.0.0
 numpy==1.12.1
 kapre==0.1.1
